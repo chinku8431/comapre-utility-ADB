@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Files</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            text-align: center;
+        }
+        input[type="file"],
+        button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Files to ADLS</h2>
+        <form id="uploadForm">
+            <input type="file" id="file1" name="file1" accept=".txt" required />
+            <input type="file" id="file2" name="file2" accept=".txt" required />
+            <input type="file" id="file3" name="file3" accept=".xml" required />
+            <button type="submit">Upload</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        const form = document.getElementById("uploadForm");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch("/upload-files", {
+                    method: "POST",
+                    body: formData,
+                });
+                const result = await response.json();
+                const resultDiv = document.getElementById("result");
+                resultDiv.textContent = JSON.stringify(result, null, 2);
+                resultDiv.style.whiteSpace = "pre-wrap";
+            } catch (error) {
+                alert("Error uploading files.");
+            }
+        });
+    </script>
+</body>
+</html>
